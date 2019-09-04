@@ -1,0 +1,27 @@
+version: '3.5'
+
+services:
+
+  nats-0:
+    container_name: nats-0
+    image: nats-streaming:0.11.2-linux
+    command: -p 4222 -m 8222 -store file -dir store-1 -clustered -cluster_node_id a -cluster_peers b,c -cluster nats://nats-0:6222 -routes nats://nats-1:6223,nats://nats-2:6224 
+    ports:
+    - 4222:4222
+    - 8222:8222
+
+  nats-1:
+    container_name: nats-1
+    image: nats-streaming:0.11.2-linux
+    command: -p 4223 -m 8223 -store file -dir store-2  -clustered -cluster_node_id b -cluster_peers a,c -cluster nats://nats-1:6223 -routes nats://nats-0:6222,nats://nats-2:6224
+    ports:
+    - 4223:4223
+    - 8223:8223
+
+  nats-2:
+    container_name: nats-2
+    image: nats-streaming:0.11.2-linux
+    command: -p 4224 -m 8224 -store file -dir store-3 -clustered -cluster_node_id c -cluster_peers a,b -cluster nats://nats-2:6224 -routes nats://nats-0:6222,nats://nats-1:6223
+    ports:
+    - 4224:4224
+    - 8224:8224
